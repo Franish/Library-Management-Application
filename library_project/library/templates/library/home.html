@@ -1,0 +1,40 @@
+{% extends 'library/base.html' %}
+
+{% block title %}Library Home{% endblock %}
+
+{% block content %}
+    <h1>📚 Library Book List</h1>
+
+    {% if user.is_authenticated and user.is_staff %}
+        <p>
+            <a href="{% url 'add_book' %}" class="button">➕ Add a New Book</a>
+        </p>
+    {% endif %}
+
+    <ul>
+        {% for book in books %}
+        <li>
+            <strong>{{ book.title }}</strong> by {{ book.author }}<br>
+            Available: {{ book.available_copies }} / {{ book.total_copies }}
+
+            {% if user.is_authenticated %}
+                <div style="margin-top: 8px;">
+                    {% if book.available_copies > 0 %}
+                        <a href="{% url 'borrow_book' book.id %}" class="button">📚 Borrow</a>
+                    {% endif %}
+
+                    {% if book.available_copies < book.total_copies %}
+                        <a href="{% url 'return_book' book.id %}" class="button">🔄 Return</a>
+                    {% endif %}
+
+                    {% if user.is_staff %}
+                        <a href="{% url 'delete_book' book.id %}" class="button" style="background-color: red;">🗑️ Delete</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </li>
+        {% empty %}
+        <li>No books available.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

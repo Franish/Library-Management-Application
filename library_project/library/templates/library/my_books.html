@@ -1,0 +1,20 @@
+{% extends 'library/base.html' %}
+{% block title %}My Borrowed Books{% endblock %}
+{% block content %}
+<h2>My Borrowed Books</h2>
+<ul>
+    {% for record in records %}
+    <li>
+        {{ record.book.title }} —
+        Borrowed on {{ record.borrow_date|date:"Y-m-d H:i" }}
+        {% if record.return_date %}
+            — Returned on {{ record.return_date|date:"Y-m-d H:i" }}
+        {% else %}
+            — <strong style="color: red;">Not Returned</strong>
+        {% endif %}
+    </li>
+    {% empty %}
+    <li>You haven’t borrowed any books yet.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
